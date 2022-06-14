@@ -1,54 +1,34 @@
-import express from 'express';
-import { PrismaClient, Prisma } from '@prisma/client';
+import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import morgan from 'morgan';
+import cors from 'cors';
+
+import { errorLogger, handleError } from './helpers/ErrorHelpers'
+
+import policyRoutes from './routes/PolicyRoutes';
 
 const app = express();
 const port = 4000;
-const prisma = new PrismaClient();
 
-app.use(express.json())
+  // setup middleware
+  app.use(cors());
+  app.use(morgan('dev'))
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: true }))
 
-app.get('/policies', async (req, res) => {
-  const { search } = req.query;
+  // setup routes 
+  app.use(policyRoutes)
 
-  const or: Prisma.PolicyWhereInput = search
-    ? {
-      OR: [
-        { provider: { contains: search as string, mode: 'insensitive' } },
-        { customer: { firstName: { contains: search as string, mode: 'insensitive' } } },
-        { customer: { lastName: { contains: search as string, mode: 'insensitive' } } }
-      ],
-    }
-    : {};
-
-  const policies = await prisma.policy.findMany({
-    where: {
-      ...or,
-    },
-    select: {
-      id: true,
-      provider: true,
-      insuranceType: true,
-      status: true,
-      startDate: true,
-      endDate: true,
-      customer: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          dateOfBirth: true
-        }
-      }
-    }
+  // handle server generated error 
+  app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
+    handleError(err, req, res, next);
+    errorLogger(err, req, res);
+    next()
   })
 
-  res.json(policies);
-})
 
-app.get('/', (req, res) => {
-  res.send('Server is up and running 🚀')
-})
+  // listen to app for requests
+  app.listen(port, () => {
+    console.log(`🚀  Server ready at ${port}`);
+  });
 
-app.listen(port, () => {
-  console.log(`🚀  Server ready at ${port}`);
-});
+  export default app;
