@@ -72,7 +72,7 @@ const Table = ({ policies, loading }: TableProps) => (
                 </tr>
               ) : (
                 policies.map((policy, i) => (
-                  <tr className='border-b' key={policy.id}>
+                  <tr className='border-b' key={policy.id} data-testid='table-cell'>
                     <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                       {i + 1}
                     </td>

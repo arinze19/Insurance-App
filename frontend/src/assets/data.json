@@ -1,0 +1,83 @@
+{
+ "policies": [
+  {
+    "id": "0a58e443-9802-47ff-9305-cb5fa3ada437",
+    "provider": "TK",
+    "insuranceType": "HEALTH",
+    "status": "ACTIVE",
+    "startDate": "2012-09-24T09:55:17.000Z",
+    "endDate": null,
+    "familyMembers": [
+      {
+        "name": "Thomas"
+      }
+    ],
+    "customer": {
+      "id": "70facb3e-c0b5-4d71-97b9-f625456968e1",
+      "firstName": "Rozelle",
+      "lastName": "Nipper",
+      "dateOfBirth": "2005-08-12T07:01:40.000Z"
+    }
+  },
+  {
+    "id": "0e33757e-5b78-40a8-870e-4774c18d97e8",
+    "provider": "BARMER",
+    "insuranceType": "HEALTH",
+    "status": "PENDING",
+    "startDate": "2017-04-26T05:32:06.000Z",
+    "endDate": null,
+    "familyMembers": [],
+    "customer": {
+      "id": "38bb2c44-e8c4-45c9-a071-cac92a92358e",
+      "firstName": "Cyrillus",
+      "lastName": "Biddlecombe",
+      "dateOfBirth": "1978-12-03T06:33:17.000Z"
+    }
+  },
+  {
+    "id": "1d104132-6df3-445a-b98d-5b86fd12bf78",
+    "provider": "AOK",
+    "insuranceType": "HEALTH",
+    "status": "PENDING",
+    "startDate": "2020-07-21T19:40:35.000Z",
+    "endDate": null,
+    "familyMembers": [],
+    "customer": {
+      "id": "0a878331-303c-45b7-aac8-ba292272cfd7",
+      "firstName": "Aguste",
+      "lastName": "Bilsford",
+      "dateOfBirth": "1997-04-24T11:26:05.000Z"
+    }
+  },
+  {
+    "id": "331bebaf-fcdf-4406-b650-57faacec7fe9",
+    "provider": "TK",
+    "insuranceType": "HEALTH",
+    "status": "ACTIVE",
+    "startDate": "2012-07-04T15:31:29.000Z",
+    "endDate": null,
+    "familyMembers": [],
+    "customer": {
+      "id": "13bf2662-87ae-45f2-ac94-cdf6c8ae43a5",
+      "firstName": "Amanda",
+      "lastName": "McPherson",
+      "dateOfBirth": "1977-10-16T17:54:53.000Z"
+    }
+  },
+  {
+    "id": "33853c96-2392-4ef1-9e4e-4c55fdd08b42",
+    "provider": "BARMER",
+    "insuranceType": "HEALTH",
+    "status": "ACTIVE",
+    "startDate": "2018-05-11T11:56:51.000Z",
+    "endDate": null,
+    "familyMembers": [],
+    "customer": {
+      "id": "bd20d2af-e470-4e25-9f64-21bff9b925ba",
+      "firstName": "Tani",
+      "lastName": "Erasmus",
+      "dateOfBirth": "2022-03-06T08:51:11.000Z"
+    }
+  }
+]
+}

@@ -1,5 +1,5 @@
 import { screen, render } from '@testing-library/react';
-import Table from '../../components/UI/Table';
+import Table from './Table';
 import { Policy } from '../../types';
 
 const policies: Policy[] = [
@@ -16,6 +16,11 @@ const policies: Policy[] = [
       firstName: 'Rozelle',
       lastName: 'Nipper',
     },
+    familyMembers: [
+      {
+        name: 'Thomas'
+      }
+    ]
   },
   {
     id: '0e33757e-5b78-40a8-870e-4774c18d97e8',
@@ -30,6 +35,11 @@ const policies: Policy[] = [
       firstName: 'Rozelle',
       lastName: 'Nipper',
     },
+    familyMembers: [
+      {
+        name: 'Kylie'
+      }
+    ]
   },
   {
     id: '1d104132-6df3-445a-b98d-5b86fd12bf78',
@@ -44,6 +54,11 @@ const policies: Policy[] = [
       firstName: 'Rozelle',
       lastName: 'Nipper',
     },
+    familyMembers: [
+      {
+        name: 'James'
+      }
+    ]
   },
   {
     id: '331bebaf-fcdf-4406-b650-57faacec7fe9',
@@ -58,6 +73,11 @@ const policies: Policy[] = [
       firstName: 'Rozelle',
       lastName: 'Nipper',
     },
+    familyMembers: [
+      {
+        name: 'Reus'
+      }
+    ]
   },
   {
     id: '33853c96-2392-4ef1-9e4e-4c55fdd08b42',
@@ -72,6 +92,11 @@ const policies: Policy[] = [
       firstName: 'Rozelle',
       lastName: 'Nipper',
     },
+    familyMembers: [
+      {
+        name: 'Robert'
+      }
+    ]
   },
 ];
 

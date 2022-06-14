@@ -37,7 +37,7 @@ const PolicyPage = () => {
   }, [])
 
   return (
-    <div className='w-5/6 max-w-screen-xl h-screen mx-auto'>
+    <div className='w-5/6 max-w-screen-xl h-screen mx-auto' data-testid='policy-page-container'>
       <Header loading={loading} handleAPICall={handleAPICall} />
       <Table policies={policies} loading={loading} />
       <Pagination policiesLength={policies.length} handleAPICall={handleAPICall} />

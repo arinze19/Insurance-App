@@ -1,5 +1,5 @@
 import { screen, render } from '@testing-library/react';
-import Header from '../../components/UI/Header';
+import Header from './Header';
 
 describe('UNIT: unit tests for header component', () => {
   const handleAPICall = jest.fn();

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import CardItem from '../../components/cards/CardItem';
+import CardItem from './CardItem';
 import { PolicySummary, CardItemProp } from '../../types';
 
 const MockCardItem = ({ policy }: CardItemProp) => {
