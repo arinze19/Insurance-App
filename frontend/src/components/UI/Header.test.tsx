@@ -1,4 +1,4 @@
-import { screen, render } from '@testing-library/react';
+import { screen, render, fireEvent } from '@testing-library/react';
 import Header from './Header';
 
 describe('UNIT: unit tests for header component', () => {
@@ -18,4 +18,13 @@ describe('UNIT: unit tests for header component', () => {
 
     expect(submitElement).toBeDisabled();
   });
+
+  it('correctly updates conrolled input', () => {
+    render(<Header handleAPICall={handleAPICall} loading={false} />)
+
+    const inputElement = screen.getByTestId('header-input') as HTMLInputElement;
+    fireEvent.change(inputElement, { target: { value: 'ARINZE' } })
+
+    expect(inputElement.value).toMatch(/ARINZE/i)
+  })
 });

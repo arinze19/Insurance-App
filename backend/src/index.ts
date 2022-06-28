@@ -4,9 +4,11 @@ import cors from 'cors';
 
 import { errorLogger, handleError } from './helpers/ErrorHelpers'
 
-import policyRoutes from './routes/PolicyRoutes';
+// import policyRoutes from './routes/PolicyRoutes';
+import Routes from './routes';
 
 const app = express();
+const router = express.Router();
 const port = 4000;
 
   // setup middleware
@@ -16,13 +18,13 @@ const port = 4000;
   app.use(express.urlencoded({ extended: true }))
 
   // setup routes 
-  app.use(policyRoutes)
+  app.use(Routes.route(router))
 
   // handle server generated error 
   app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
     handleError(err, req, res, next);
-    errorLogger(err, req, res);
-    next()
+    // errorLogger(err, req, res);
+    // next()
   })
 
 

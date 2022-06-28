@@ -9,7 +9,7 @@ const HomePage = () => {
           Moving to a new country is hard and complex enough, getting an
           insurance shouldn't, leave it to us...Feather
         </p>
-      </div>
+      </div> 
 
       <CardList />
     </div>

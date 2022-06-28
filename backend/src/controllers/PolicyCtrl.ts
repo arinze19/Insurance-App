@@ -2,8 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { PrismaClient, Prisma } from '@prisma/client';
 
 // error handlers
-import { ErrorHandler} from '../helpers/ErrorHelpers';
-
+import { ErrorHandler } from '../helpers/ErrorHelpers';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +10,7 @@ enum PolicyStatus {
   ACTIVE = 'ACTIVE',
   PENDING = 'PENDING',
   CANCELLED = 'CANCELLED',
-  DROPPED_OUT = 'DROPPED_OUT'
+  DROPPED_OUT = 'DROPPED_OUT',
 }
 
 class PolicyCtrl {
@@ -37,30 +36,34 @@ class PolicyCtrl {
             {
               familyMembers: {
                 some: {
-                  name: { contains: search as string, mode: 'insensitive' }
-                }
-              }
-            }
+                  name: { contains: search as string, mode: 'insensitive' },
+                },
+              },
+            },
           ],
         }
       : {};
 
-      // prevent users from filtering dropped and cancelled policies
-      if(filter && filter !== 'ACTIVE' && filter !== 'PENDING') {
-        return next(new ErrorHandler(`Sorry, you can not filter for ${filter} at this point`, 400))
-      }
+    // prevent users from filtering dropped and cancelled policies
+    if (filter && filter !== 'ACTIVE' && filter !== 'PENDING') {
+      return next(
+        new ErrorHandler(
+          `Sorry, you can not filter for ${filter} at this point`,
+          400
+        )
+      );
+    }
 
-      const and: Prisma.PolicyWhereInput = filter 
-        ? 
-        {
-          AND: [{ status: filter  as unknown as PolicyStatus }]
-        } 
-        : { AND: [{ OR: [{ status: 'ACTIVE' }, { status: 'PENDING' }] }] }
+    const and: Prisma.PolicyWhereInput = filter
+      ? {
+          AND: [{ status: filter as unknown as PolicyStatus }],
+        }
+      : { AND: [{ OR: [{ status: 'ACTIVE' }, { status: 'PENDING' }] }] };
 
     const policies = await prisma.policy.findMany({
       where: {
         ...or,
-        ...and
+        ...and,
       },
       select: {
         id: true,
@@ -71,8 +74,8 @@ class PolicyCtrl {
         endDate: true,
         familyMembers: {
           select: {
-            name: true
-          }
+            name: true,
+          },
         },
         customer: {
           select: {
@@ -84,46 +87,74 @@ class PolicyCtrl {
         },
       },
       skip,
-      take
+      take,
     });
 
     res.status(200).json(policies);
   }
 
-
-
-  static async addFamilyMember(req: Request, res: Response, next: NextFunction) {
+  static async addFamilyMember(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { name } = req.body;
     const { policyId } = req.params;
 
     const policy = await prisma.policy.findUnique({
       where: {
-        id: policyId
-      }
-    })
+        id: policyId,
+      },
+    });
 
     // prevent users from adding a family member to expired or dropped policies
-    if(policy && policy.status !== 'ACTIVE' && policy.status !== 'PENDING') {
-      return next(new ErrorHandler(`Sorry, You can not update this policy as it is currently ${policy.status}`, 400))
-    }
- 
-    // NOT FOUND ERROR
-    if(!policy) {
-      return next(new ErrorHandler(`Sorry there are no policies with the id: ${policyId}`, 404));
+    if (policy && policy.status !== 'ACTIVE' && policy.status !== 'PENDING') {
+      return next(
+        new ErrorHandler(
+          `Sorry, You can not update this policy as it is currently ${policy.status}`,
+          400
+        )
+      );
     }
 
-    if(!name) {
-      return next(new ErrorHandler('A name field is required', 400))
+    // NOT FOUND ERROR
+    if (!policy) {
+      return next(
+        new ErrorHandler(
+          `Sorry there are no policies with the id: ${policyId}`,
+          404
+        )
+      );
+    }
+
+    if (!name) {
+      return next(new ErrorHandler('A name field is required', 400));
     }
 
     const family = await prisma.family.create({
       data: {
         name: name,
-        policyId: policyId
-      }
-    })
+        policyId: policyId,
+      },
+    });
 
     res.status(201).json(family);
+  }
+
+  static async test(req: Request, res: Response) {
+    const { filter } = req.query;
+
+    
+
+    const policies = await prisma.policy.findMany({
+      where: {
+        familyMembers: {
+          none: {}
+        },
+      },
+    });
+
+    res.status(200).json(policies);
   }
 }
 

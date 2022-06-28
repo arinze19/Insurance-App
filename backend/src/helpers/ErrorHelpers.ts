@@ -1,15 +1,23 @@
 import { Request, Response, NextFunction } from 'express'
 
+enum ServerErrorCodes {
+    internalError = 500,
+    notImplemented = 501,
+    serviceUnavailable = 503,
+    gatewayTimeout = 504
+}
+
 // Base Error class
 class ErrorHandler extends Error {
-    error: string;
+    // error: string;
     statusCode: number;
 
     constructor(errorMessage: string, statusCode = 500) {
         super(errorMessage)
-        this.error = errorMessage || 'Sorry, something went wrong on our end. please try again later';
+        // this.error = errorMessage || 'Sorry, something went wrong on our end. please try again later';
+        this.name = Error.name;
         this.statusCode = statusCode;
-        Error.captureStackTrace(this)
+        Error.captureStackTrace(this);
     }
 }
 
@@ -38,7 +46,9 @@ const handleError = (err: any, req: Request, res: Response, next: NextFunction) 
         }
     });
 
-    next(err)
+    if(err.statusCode in ServerErrorCodes) {
+        errorLogger(err, req, res)
+    }
 }
 
 export { ErrorHandler, handleError, errorLogger }

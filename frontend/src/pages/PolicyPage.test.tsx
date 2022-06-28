@@ -1,10 +1,11 @@
-import { screen, render } from '@testing-library/react';
+import { screen, render, cleanup, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import PolicyPage from './PolicyPage';
 
-// mock axios and cast type to prevent calling API in async code
-// jest.mock('axios');
-// const mockedAxios = axios as jest.Mocked<typeof axios>;
+import mockAxios from 'axios';
+import { policies } from '../assets/data.json';
+
+afterEach(cleanup);
 
 const MockPolicyPage = () => {
   return (
@@ -22,3 +23,19 @@ describe('UNIT: unit tests for policy page component', () => {
     expect(policyContainer).toBeInTheDocument();
   });
 });
+
+
+describe('INTEGRATION: integration tests for policy page component', () => {
+  it('renders the number of users acuurately', async () => {
+    (mockAxios.get as jest.Mock).mockResolvedValueOnce({ data: policies })
+
+    render(<MockPolicyPage />);
+
+    const tableCellElements = await waitFor(() => screen.getAllByTestId('table-cell'))
+
+    expect(mockAxios.get).toHaveBeenCalledTimes(1);
+    expect(tableCellElements).toHaveLength(5)
+
+  })
+})
+

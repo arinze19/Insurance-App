@@ -15,7 +15,7 @@ const PolicyPage = () => {
 
     try {
     setLoading(true)
-    let url = 'http://localhost:4000/policies?' + query;
+    let url = '/policies?' + query;
     const { data } = await axios.get(url, { signal: abortController.signal });
 
     if(!abortController.signal.aborted) {
