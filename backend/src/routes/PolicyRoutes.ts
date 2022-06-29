@@ -6,6 +6,7 @@ import PolicyCtrl from '../controllers/PolicyCtrl';
 class PolicyRoutes {
   static route(router: IRouter) {
     router.route('/policies').get(PolicyCtrl.getPolicies)
+    router.route('/policies/:policyId/add-family').post(PolicyCtrl.addFamilyMember)
   }
 }
 

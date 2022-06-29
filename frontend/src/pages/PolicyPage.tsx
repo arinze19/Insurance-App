@@ -6,29 +6,23 @@ import Pagination from '../components/UI/Pagination';
 
 import { Policy } from '../types';
 
+import urlBuilder from '../helpers/urlBuilder';
+
 const PolicyPage = () => {
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleAPICall = async (query = '') => {
-    let abortController = new AbortController();
-
+  const handleAPICall = async (query = {}) => {
     try {
     setLoading(true)
-    let url = '/policies?' + query;
-    const { data } = await axios.get(url, { signal: abortController.signal });
+    // let url = '/policies?' query;
+    const { data } = await axios.get(urlBuilder(query));
 
-    if(!abortController.signal.aborted) {
       setPolicies(data)
-    }
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false);
-    }
-
-    return () => {
-      abortController.abort()
     }
   }
 

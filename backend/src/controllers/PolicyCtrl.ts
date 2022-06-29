@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, Policy } from '@prisma/client';
 
 // error handlers
 import { ErrorHandler } from '../helpers/ErrorHelpers';
@@ -107,6 +107,13 @@ class PolicyCtrl {
       },
     });
 
+    const familyExist = await prisma.family.findFirst({
+      where: {
+        policyId: policyId,
+        name: name
+      }
+    })
+
     // prevent users from adding a family member to expired or dropped policies
     if (policy && policy.status !== 'ACTIVE' && policy.status !== 'PENDING') {
       return next(
@@ -131,6 +138,10 @@ class PolicyCtrl {
       return next(new ErrorHandler('A name field is required', 400));
     }
 
+    if(familyExist) {
+      return next(new ErrorHandler(`Sorry, ${familyExist.name} is already a family member on this policy`, 409))
+    }
+
     const family = await prisma.family.create({
       data: {
         name: name,
@@ -139,22 +150,6 @@ class PolicyCtrl {
     });
 
     res.status(201).json(family);
-  }
-
-  static async test(req: Request, res: Response) {
-    const { filter } = req.query;
-
-    
-
-    const policies = await prisma.policy.findMany({
-      where: {
-        familyMembers: {
-          none: {}
-        },
-      },
-    });
-
-    res.status(200).json(policies);
   }
 }
 

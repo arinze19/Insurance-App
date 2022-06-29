@@ -11,7 +11,7 @@ const Header = ({ handleAPICall, loading }: HeaderProps) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleAPICall(`search=${query}&filter=${filter}`)
+    handleAPICall({ search: `${query}`, filter: `${filter}` })
   };
 
   const handleFilterChange = (e: React.FormEvent<HTMLSelectElement>) => {

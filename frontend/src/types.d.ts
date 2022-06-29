@@ -8,7 +8,7 @@ export interface CardItemProp {
 }
 
 export interface HeaderProps {
-  handleAPICall: (query?:  string) => void | Promise<() => void>;
+  handleAPICall: (query: queryInterface) => void;
   loading: boolean;
 }
 
@@ -19,10 +19,14 @@ export interface TableProps {
 
 export interface PaginationProps {
   policiesLength: number;
-  handleAPICall: (query?:  string) => void | Promise<() => void>;
+  handleAPICall: (query: queryInterface) => void;
 }
 
 // =================== core interfaces
+export interface queryInterface {
+  [key: string]: string
+}
+
 export interface Customer {
   id: string;
   firstName: string;
