@@ -19,7 +19,7 @@ const Pagination = ({ policiesLength, handleAPICall }: PaginationProps) => {
       skip = offset ? +offset - 10 : 0;
     }
 
-    handleAPICall({ offset: `${skip}` })
+    handleAPICall({ offset: skip })
   };
 
   return (

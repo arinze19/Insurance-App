@@ -1,9 +1,6 @@
-interface queryInterface {
-    [key: string]: string
-}
+import { queryInterface } from "../types";
 
 const urlBuilder = (query: queryInterface): string => {
-  // let url = 'http://localhost:4000/policies';
   let url = '/policies?';
 
   for (let prop in query) {

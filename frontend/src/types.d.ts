@@ -24,7 +24,7 @@ export interface PaginationProps {
 
 // =================== core interfaces
 export interface queryInterface {
-  [key: string]: string
+  [key: string]: string | number
 }
 
 export interface Customer {
