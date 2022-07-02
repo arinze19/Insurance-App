@@ -6,7 +6,7 @@ enum Action {
   PREV = 'PREV',
 }
 
-const Pagination = ({ policiesLength, handleAPICall }: PaginationProps) => {
+const Pagination = ({ maxPage, currentPage, handleAPICall }: PaginationProps) => {
   const [searchParams] = useSearchParams();
   const offset = searchParams.get('offset');
 
@@ -26,19 +26,20 @@ const Pagination = ({ policiesLength, handleAPICall }: PaginationProps) => {
     <div className='flex justify-between items-center my-2 float-right'>
       <div className='flex justify-between'>
         <button
-          className='text-white-100 bg-purple-200 py-2 px-4 mr-4 rounded-sm disabled:cursor-not-allowed'
+          className={`text-white-100 bg-purple-200 py-2 px-4 mr-4 rounded-sm ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           onClick={() => {
             handlePagination(Action.PREV);
           }}
+          disabled={currentPage === 1}
         >
           &#8592;
         </button>
         <button
-          className='text-white-100 bg-purple-200 py-2 px-4 rounded-sm disabled:cursor-not-allowed'
+          className={`text-white-100 bg-purple-200 py-2 px-4 rounded-sm ${currentPage >= maxPage ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           onClick={() => {
             handlePagination(Action.NEXT);
           }}
-          disabled={policiesLength < 10}
+          disabled={currentPage >= maxPage}
           data-testid='pagination-next-button'
         >
           &#8594;

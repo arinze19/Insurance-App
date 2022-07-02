@@ -18,7 +18,8 @@ export interface TableProps {
 }
 
 export interface PaginationProps {
-  policiesLength: number;
+  maxPage: number;
+  currentPage: number;
   handleAPICall: (query?:  string) => void | Promise<() => void>;
 }
 
