@@ -8,17 +8,22 @@ import { Policy } from '../types';
 
 import urlBuilder from '../helpers/urlBuilder';
 
+interface IData {
+  policies: Policy[];
+  maxPage: number;
+  currentPage: number;
+}
+
 const PolicyPage = () => {
-  const [policies, setPolicies] = useState<Policy[]>([]);
+  const [data, setData] = useState<IData>({policies: [], maxPage: 0, currentPage: 0});
   const [loading, setLoading] = useState(true);
 
   const handleAPICall = async (query = {}) => {
     try {
     setLoading(true)
-    // let url = '/policies?' query;
-    const { data } = await axios.get(urlBuilder(query));
+    const{ data } = await axios.get(urlBuilder(query));
 
-      setPolicies(data)
+      setData(data)
     } catch (error) {
       console.log(error)
     } finally {
@@ -33,8 +38,8 @@ const PolicyPage = () => {
   return (
     <div className='w-5/6 max-w-screen-xl h-screen mx-auto' data-testid='policy-page-container'>
       <Header loading={loading} handleAPICall={handleAPICall} />
-      <Table policies={policies} loading={loading} />
-      <Pagination policiesLength={policies.length} handleAPICall={handleAPICall} />
+      <Table policies={data.policies} loading={loading} />
+      <Pagination maxPage={data.maxPage} currentPage={data.currentPage} handleAPICall={handleAPICall} />
     </div>
   );
 };

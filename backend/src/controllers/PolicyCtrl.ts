@@ -15,9 +15,9 @@ enum PolicyStatus {
 
 class PolicyCtrl {
   static async getPolicies(req: Request, res: Response, next: NextFunction) {
-    let { search, filter, offset = 0, limit = 10 } = req.query;
+    let { search, filter, offset = 0 } = req.query;
     const skip = +offset as unknown as number;
-    const take = +limit as unknown as number;
+    const take = 10;
 
     const or: Prisma.PolicyWhereInput = search
       ? {
@@ -60,6 +60,7 @@ class PolicyCtrl {
         }
       : { AND: [{ OR: [{ status: 'ACTIVE' }, { status: 'PENDING' }] }] };
 
+
     const policies = await prisma.policy.findMany({
       where: {
         ...or,
@@ -90,7 +91,19 @@ class PolicyCtrl {
       take,
     });
 
-    res.status(200).json(policies);
+    const queryCount = await prisma.policy.count({
+      where: {
+        ...or,
+        ...and
+      }
+    })
+
+    res.status(200).json({
+      policies, 
+      queryCount, 
+      maxPage: Math.round(queryCount / take), 
+      currentPage: (skip / take) + 1
+    });
   }
 
   static async addFamilyMember(
@@ -150,6 +163,25 @@ class PolicyCtrl {
     });
 
     res.status(201).json(family);
+  }
+
+  static async getCustomerFamilyMembers(req: Request, res: Response, next:NextFunction) {
+    const { customerId } = req.params;
+
+    const data = await prisma.customer.findUnique({
+      where: {
+        id: customerId
+      },
+      select: {
+        policies: {
+          select: {
+            familyMembers: true
+          }
+        }
+      }
+    })
+
+    res.status(200).json(data)
   }
 }
 
