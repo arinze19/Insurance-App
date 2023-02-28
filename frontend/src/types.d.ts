@@ -1,3 +1,5 @@
+import React from "react";
+
 type InsuranceTypes = 'HEALTH' | 'LIABILITY' | 'HOUSEHOLD';
 
 type PolicyStatus = 'ACTIVE' | 'PENDING' | 'DROPPED_OUT' | 'CANCELLED';
@@ -8,24 +10,45 @@ export interface CardItemProp {
 }
 
 export interface HeaderProps {
-  handleAPICall: (query: queryInterface) => void;
-  loading: boolean;
+  filter: {
+    query: string;
+    dropdown: { value: string; label: string };
+  };
+  setFilter: (props: {
+    query: string;
+    dropdown: { value: string; label: string };
+  }) => void;
 }
 
 export interface TableProps {
   policies: Policy[];
   loading: boolean;
+  page: Omit<PaginationProps, 'handlePaginate'>;
+  setPage: (page: PageData) => void;
 }
 
-export interface PaginationProps {
-  maxPage: number;
-  currentPage: number;
-  handleAPICall: (query: queryInterface) => void ;
+export interface PaginationProps extends PageData {
+  handlePaginate: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}
+
+export interface SelectProps {
+  label: string;
+  options: { value: string; label: string }[];
+  handleChange: (e: MouseEventHandler<HTMLLIElement>) => void;
 }
 
 // =================== core interfaces
+export interface PageData {
+  max: number;
+  current: number;
+  from: number;
+  to: number;
+  count: number;
+  offset: number;
+}
+
 export interface queryInterface {
-  [key: string]: string | number
+  [key: string]: string | number;
 }
 
 export interface Customer {
@@ -48,7 +71,7 @@ export interface Policy {
   createdAt?: string;
   startDate: string;
   endDate: null | string;
-  familyMembers: Family[]
+  familyMembers: Family[];
 }
 
 export interface PolicySummary {
@@ -56,4 +79,5 @@ export interface PolicySummary {
   type: InsuranceTypes;
   name: string;
   description: string;
+  icon: React.ReactNode
 }

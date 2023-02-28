@@ -1,10 +1,7 @@
-import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-
-import { errorLogger, handleError } from './helpers/ErrorHelpers'
-
-// import policyRoutes from './routes/PolicyRoutes';
+import { handleError } from './helpers/ErrorHelpers'
 import Routes from './routes';
 
 const app = express();
@@ -21,10 +18,8 @@ const port = 4000;
   app.use(Routes.route(router))
 
   // handle server generated error 
-  app.use((err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     handleError(err, req, res, next);
-    // errorLogger(err, req, res);
-    // next()
   })
 
 

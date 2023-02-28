@@ -7,7 +7,7 @@ const HomePage = () => {
         <h1 className='text-4xl font-bold mb-2 text-gray-800'>Honest, simple insurance</h1>
         <p className='text-gray-500'> 
           Moving to a new country is hard and complex enough, getting an
-          insurance shouldn't, leave it to us...Feather
+          insurance shouldn't, leave it to us...Feather 🪶
         </p>
       </div> 
 

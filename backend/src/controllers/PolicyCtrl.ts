@@ -1,8 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
-import { PrismaClient, Prisma, Policy } from '@prisma/client';
-
-// error handlers
-import { ErrorHandler } from '../helpers/ErrorHelpers';
+import { PrismaClient, Prisma } from '@prisma/client';
+import { ErrorHandler } from '../helpers';
 
 const prisma = new PrismaClient();
 
@@ -60,7 +58,6 @@ class PolicyCtrl {
         }
       : { AND: [{ OR: [{ status: 'ACTIVE' }, { status: 'PENDING' }] }] };
 
-
     const policies = await prisma.policy.findMany({
       where: {
         ...or,
@@ -91,41 +88,50 @@ class PolicyCtrl {
       take,
     });
 
-    const queryCount = await prisma.policy.count({
+    const count = await prisma.policy.count({
       where: {
         ...or,
-        ...and
-      }
-    })
-
-    res.status(200).json({
-      policies, 
-      queryCount, 
-      maxPage: Math.round(queryCount / take), 
-      currentPage: (skip / take) + 1
-    });
-  }
-
-  static async addFamilyMember(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { name } = req.body;
-    const { policyId } = req.params;
-
-    const policy = await prisma.policy.findUnique({
-      where: {
-        id: policyId,
+        ...and,
       },
     });
 
-    const familyExist = await prisma.family.findFirst({
-      where: {
-        policyId: policyId,
-        name: name
-      }
-    })
+    const current = skip / take + 1;
+    const max = Math.round(count / take);
+
+    res.status(200).json({
+      policies,
+      page: {
+        count,
+        current,
+        max,
+        offset: skip,
+        from: max == 0 ? 0 : (current - 1) * take + 1,
+        to: current < max ? current * take : count,
+      },
+    });
+  }
+
+  static async addFamily(req: Request, res: Response, next: NextFunction) {
+    const { name } = req.body;
+    const { policyId } = req.params;
+
+    const [policy, familyExist] = await Promise.all([
+      await prisma.policy.findUnique({
+        where: {
+          id: policyId,
+        },
+      }),
+      await prisma.family.findFirst({
+        where: {
+          policyId: policyId,
+          name: { contains: name as string, mode: 'insensitive' },
+        },
+        select: {
+          name: true,
+          policy: true,
+        },
+      }),
+    ]);
 
     // prevent users from adding a family member to expired or dropped policies
     if (policy && policy.status !== 'ACTIVE' && policy.status !== 'PENDING') {
@@ -147,12 +153,14 @@ class PolicyCtrl {
       );
     }
 
-    if (!name) {
-      return next(new ErrorHandler('A name field is required', 400));
-    }
-
-    if(familyExist) {
-      return next(new ErrorHandler(`Sorry, ${familyExist.name} is already a family member on this policy`, 409))
+    // CONFLICT ERROR
+    if (familyExist) {
+      return next(
+        new ErrorHandler(
+          `Sorry, ${familyExist.name} is already a family member on this policy`,
+          409
+        )
+      );
     }
 
     const family = await prisma.family.create({
@@ -165,23 +173,24 @@ class PolicyCtrl {
     res.status(201).json(family);
   }
 
-  static async getCustomerFamilyMembers(req: Request, res: Response, next:NextFunction) {
+  static async getAllFamily(req: Request, res: Response, next: NextFunction) {
     const { customerId } = req.params;
 
-    const data = await prisma.customer.findUnique({
+    const data = await prisma.policy.findMany({
       where: {
-        id: customerId
+        customerId: customerId,
       },
       select: {
-        policies: {
+        familyMembers: {
           select: {
-            familyMembers: true
-          }
-        }
-      }
-    })
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
-    res.status(200).json(data)
+    res.status(200).json(data);
   }
 }
 

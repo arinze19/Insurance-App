@@ -1,13 +1,23 @@
 import { IRouter } from 'express';
-import PolicyCtrl from '../controllers/PolicyCtrl';
-
+import { PolicyCtrl } from '../controllers';
+import { FamilyVld } from '../validations';
+import { AsyncMiddleware } from '../middleware';
 
 class PolicyRoutes {
   static route(router: IRouter) {
-    router.route('/policies').get(PolicyCtrl.getPolicies)
-    router.route('/policies/:policyId/add-family').post(PolicyCtrl.addFamilyMember)
-    router.route('/customers/:customerId/family').get(PolicyCtrl.getCustomerFamilyMembers)
+    router
+      .route('/policies')
+      .get(AsyncMiddleware.handle(PolicyCtrl.getPolicies));
+    router
+      .route('/policies/:policyId/add-family')
+      .post(
+        FamilyVld.validateAdd,
+        AsyncMiddleware.handle(PolicyCtrl.addFamily)
+      );
+    router
+      .route('/customers/:customerId/all-family')
+      .get(AsyncMiddleware.handle(PolicyCtrl.getAllFamily));
   }
 }
 
-export default PolicyRoutes
+export default PolicyRoutes;

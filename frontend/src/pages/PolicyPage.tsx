@@ -1,45 +1,63 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import api from '../utils/api';
 import Header from '../components/UI/Header';
 import Table from '../components/UI/Table';
-import Pagination from '../components/UI/Pagination';
-
-import { Policy } from '../types';
-
-import urlBuilder from '../helpers/urlBuilder';
-
-interface IData {
-  policies: Policy[];
-  maxPage: number;
-  currentPage: number;
-}
+import { Policy, PageData } from '../types';
 
 const PolicyPage = () => {
-  const [data, setData] = useState<IData>({policies: [], maxPage: 0, currentPage: 0});
-  const [loading, setLoading] = useState(true);
+  const [policies, setPolicies] = React.useState<Policy[]>([]);
+  const [page, setPage] = React.useState<PageData>({
+    max: 0,
+    current: 0,
+    from: 0,
+    to: 0,
+    count: 0,
+    offset: 0,
+  });
+  const [filter, setFilter] = React.useState({
+    query: '',
+    dropdown: { value: '', label: 'Filter by status' },
+  });
+  const [loading, setLoading] = React.useState(true);
 
-  const handleAPICall = async (query = {}) => {
+  const handleCall = async (page: PageData) => {
     try {
-    setLoading(true)
-    const{ data } = await axios.get(urlBuilder(query));
+      setLoading(true);
+      const { data } = await api.get(
+        `/policies?search=${filter.query}&filter=${filter.dropdown.value}&offset=${page.offset}`
+      );
 
-      setData(data)
+      setPolicies(data.policies);
+      setPage(data.page);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  useEffect(() => {
-    handleAPICall()
-  }, [])
+  React.useEffect(() => {
+    handleCall(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page.offset]);
+
+  React.useEffect(() => {
+    handleCall({ max: 0, current: 0, from: 0, to: 0, count: 0, offset: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter.query, filter.dropdown.value]);
 
   return (
-    <div className='w-5/6 max-w-screen-xl h-screen mx-auto' data-testid='policy-page-container'>
-      <Header loading={loading} handleAPICall={handleAPICall} />
-      <Table policies={data.policies} loading={loading} />
-      <Pagination maxPage={data.maxPage} currentPage={data.currentPage} handleAPICall={handleAPICall} />
+    <div
+      className='w-11/12 max-w-screen-xl h-screen mx-auto'
+      data-testid='policy-page-container'
+    >
+      <Header filter={filter} setFilter={setFilter} />
+      <Table
+        policies={policies}
+        loading={loading}
+        page={page}
+        setPage={setPage}
+      />
     </div>
   );
 };

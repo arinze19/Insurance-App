@@ -7,19 +7,21 @@ const colors = {
     purple: {
       50: '#FCFCFF',
       100: '#F7F7FF',
-      200: '#8E8CEE'
+      200: '#8E8CEE',
     },
     white: {
-      100: '#FFFFFF'
-    }
-  }
-}
-
+      100: '#FFFFFF',
+    },
+  },
+};
 
 module.exports = {
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      sans: ['DM Sans', 'sans-serif'],
+    },
     colors: colors,
     extend: {},
   },

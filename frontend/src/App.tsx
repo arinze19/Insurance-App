@@ -1,9 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-
 import Navbar from './components/UI/Navbar';
 import HomePage from './pages/HomePage';
 import PolicyPage from './pages/PolicyPage';
-
 import './index.css';
 
 const App = () => (
