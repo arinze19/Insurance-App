@@ -39,7 +39,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "yarn prisma migrate dev && yarn prisma db seed && node dist/src/index",
+    "start": "yarn build && yarn prisma migrate dev && yarn prisma db seed && node dist/src/index",
     "start:dev": "nodemon",
     "test": "mocha -r ts-node/register src/**/*.test.ts --watch"
   },
