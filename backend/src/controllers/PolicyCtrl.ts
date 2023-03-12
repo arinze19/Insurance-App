@@ -1,5 +1,6 @@
 import { ErrorHandler } from '../helpers';
-import { PrismaClient, Prisma } from '@prisma/client';
+// import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '../../node_modules/.prisma/client';
 import type { Request, Response, NextFunction } from 'express'; 
 
 
