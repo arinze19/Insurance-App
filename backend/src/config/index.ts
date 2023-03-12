@@ -25,6 +25,7 @@ const swaggerOptions: Options = {
 };
 
 export default {
+  port: process.env.PORT || 4000,
   swagger: {
     options: swaggerOptions,
   },

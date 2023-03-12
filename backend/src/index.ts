@@ -11,7 +11,6 @@ import express, { Request, Response, NextFunction } from 'express';
 
 const app = express();
 const router = express.Router();
-const port = 4000;
 
 // setup middleware
 app.use(cors());
@@ -45,8 +44,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 // listen to app for requests
-app.listen(port, () => {
-  console.log(`🚀  Server ready at ${port}`);
+app.listen(config.port, () => {
+  console.log(`🚀  Server ready at ${config.port}`);
 });
 
 export default app;
