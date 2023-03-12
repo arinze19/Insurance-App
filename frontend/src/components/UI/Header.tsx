@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from './Select';
 import { HeaderProps } from '../../types';
+import Input from './Input';
 
 const Header = ({ filter, setFilter }: HeaderProps) => {
   const options = [
@@ -13,7 +14,9 @@ const Header = ({ filter, setFilter }: HeaderProps) => {
     setFilter({ ...filter, query: e.currentTarget.value });
   };
 
-  const handleFilterChange = (e: React.FormEvent<HTMLDivElement>) => {
+  const handleFilterChange = (
+    e: React.MouseEvent<HTMLLIElement, MouseEvent>
+  ) => {
     const { value, label } = e.currentTarget.dataset;
 
     setFilter({
@@ -28,23 +31,27 @@ const Header = ({ filter, setFilter }: HeaderProps) => {
   return (
     <div className='w-full my-12' data-testid='header-container'>
       <h1 className='text-3xl font-bold'>Policies</h1>
-      <form className='w-full'>
-        <div>
-          <input
-            className='w-full md:w-3/4 my-6 p-4 border rounded-md outline-none focus:border-purple-200'
+      <form className='flex flex-col mt-4 gap-5'>
+        <div className='w-full md:w-3/4'>
+          <Input
             type='text'
             placeholder='Search policies by name of user, provider or family members'
             value={filter.query}
             onChange={handleQueryChange}
-            data-testid='header-input'
+            data_testid='header-input'
           />
         </div>
 
-        <Select
-          options={options}
-          label={filter.dropdown.label}
-          handleChange={handleFilterChange}
-        />
+        <div className='w-full md:w-1/5'>
+          <Select
+            options={options}
+            selected={{
+              value: filter.dropdown.value,
+              label: filter.dropdown.label,
+            }}
+            handleChange={handleFilterChange}
+          />
+        </div>
       </form>
     </div>
   );

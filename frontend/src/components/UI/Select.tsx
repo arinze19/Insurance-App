@@ -1,36 +1,49 @@
 import React from 'react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { SelectProps } from '../../types.d';
+import { SelectProps } from '../../types';
 
-function Select({ options, label, handleChange }: SelectProps) {
+function Select({
+  options,
+  selected,
+  disabled = false,
+  id = '',
+  handleChange,
+}: SelectProps) {
   const [open, setOpen] = React.useState(false);
+  const customClass = !disabled
+    ? ' bg-white-100 cursor-pointer'
+    : 'bg-gray-100 cursor-not-allowed';
   const handleClick = () => {
-    setOpen(!open);
+    if (!disabled) {
+      setOpen(!open);
+    }
   };
 
   return (
-    <div className='w-full md:w-1/5 text-gray-500 relative'>
+    <div className='text-gray-500 relative'>
       <div
-        className={`flex justify-between items-center py-3 px-5 border rounded-md cursor-pointer ${
+        className={`flex justify-between items-center py-3 px-5 border rounded-md ${customClass} ${
           open && 'border border-purple-200'
         }`}
+        id={id}
         onClick={handleClick}
       >
-        {label}
+        {selected.label}
         {open ? <FiChevronUp /> : <FiChevronDown />}
       </div>
       {open && (
-        <ul className='w-full absolute top-14 left-0 border border-slate-100 rounded-md bg-purple-50 overflow-hidden'>
+        <ul className='w-full absolute top-14 left-0 border border-slate-100 rounded-md shadow-md bg-purple-50 overflow-hidden'>
           {options.map((item, i) => (
             <li
+              key={item.value}
+              onClick={handleChange}
               data-value={item.value}
               data-label={item.label}
-              id={item.value}
-              onClick={handleChange}
-              key={item.value}
-              className={`p-2 cursor-pointer ${
+              className={`p-4 cursor-pointer hover:bg-purple-100 ease-linear duration-100 ${
                 i < options.length - 1 && 'border-b'
-              } ${label === item.label && 'bg-purple-100 text-purple-200'}`}
+              } ${
+                selected.label === item.label && 'bg-purple-100 text-purple-200'
+              }`}
             >
               {item.label}
             </li>

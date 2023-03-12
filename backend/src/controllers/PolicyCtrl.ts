@@ -1,6 +1,7 @@
-import type { Request, Response, NextFunction } from 'express';
-import { PrismaClient, Prisma } from '@prisma/client';
 import { ErrorHandler } from '../helpers';
+import { PrismaClient, Prisma } from '@prisma/client';
+import type { Request, Response, NextFunction } from 'express'; 
+
 
 const prisma = new PrismaClient();
 
@@ -70,11 +71,6 @@ class PolicyCtrl {
         status: true,
         startDate: true,
         endDate: true,
-        familyMembers: {
-          select: {
-            name: true,
-          },
-        },
         customer: {
           select: {
             id: true,
@@ -111,16 +107,15 @@ class PolicyCtrl {
     });
   }
 
-  static async addFamily(req: Request, res: Response, next: NextFunction) {
+  static async addPolicyFamily(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { name } = req.body;
     const { policyId } = req.params;
 
-    const [policy, familyExist] = await Promise.all([
-      await prisma.policy.findUnique({
-        where: {
-          id: policyId,
-        },
-      }),
+    const [familyExist, count] = await Promise.all([
       await prisma.family.findFirst({
         where: {
           policyId: policyId,
@@ -131,27 +126,12 @@ class PolicyCtrl {
           policy: true,
         },
       }),
+      await prisma.family.count({
+        where: {
+          policyId,
+        },
+      }),
     ]);
-
-    // prevent users from adding a family member to expired or dropped policies
-    if (policy && policy.status !== 'ACTIVE' && policy.status !== 'PENDING') {
-      return next(
-        new ErrorHandler(
-          `Sorry, You can not update this policy as it is currently ${policy.status}`,
-          400
-        )
-      );
-    }
-
-    // NOT FOUND ERROR
-    if (!policy) {
-      return next(
-        new ErrorHandler(
-          `Sorry there are no policies with the id: ${policyId}`,
-          404
-        )
-      );
-    }
 
     // CONFLICT ERROR
     if (familyExist) {
@@ -159,6 +139,16 @@ class PolicyCtrl {
         new ErrorHandler(
           `Sorry, ${familyExist.name} is already a family member on this policy`,
           409
+        )
+      );
+    }
+
+    // prevent user from adding more than 3 family members to a policy
+    if (count >= 3) {
+      return next(
+        new ErrorHandler(
+          'Sorry, you cannot have more than 3 family members on a policy',
+          400
         )
       );
     }
@@ -173,14 +163,80 @@ class PolicyCtrl {
     res.status(201).json(family);
   }
 
-  static async getAllFamily(req: Request, res: Response, next: NextFunction) {
-    const { customerId } = req.params;
+  static async removePolicyFamily(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { policyId, familyId } = req.params;
 
-    const data = await prisma.policy.findMany({
+    const data = await prisma.family.findFirst({
       where: {
-        customerId: customerId,
+        policyId,
+        id: familyId,
       },
       select: {
+        id: true,
+        name: true,
+      },
+    });
+
+    if (!data) {
+      return next(
+        new ErrorHandler(
+          `Sorry, there is no family member with id: ${familyId} on this policy`,
+          404
+        )
+      );
+    }
+
+    const user = await prisma.family.delete({
+      where: {
+        id: data.id,
+      },
+    });
+
+    res.status(201).send(user);
+  }
+
+  static async getPolicyFamily(req: Request, res: Response) {
+    const { policyId } = req.params;
+
+    const data = await prisma.family.findMany({
+      where: {
+        policyId: policyId,
+      },
+      select: {
+        id: true,
+        name: true,
+        policyId: true,
+      },
+    });
+
+    res.status(200).json(data);
+  }
+
+  static async getPolicy(req: Request, res: Response, next: NextFunction) {
+    const { policyId } = req.params;
+
+    const policy = await prisma.policy.findUnique({
+      where: {
+        id: policyId,
+      },
+      select: {
+        id: true,
+        insuranceType: true,
+        provider: true,
+        status: true,
+        startDate: true,
+        endDate: true,
+        createdAt: true,
+        customer: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
         familyMembers: {
           select: {
             id: true,
@@ -190,7 +246,16 @@ class PolicyCtrl {
       },
     });
 
-    res.status(200).json(data);
+    if (!policy) {
+      return next(
+        new ErrorHandler(
+          `Sorry, Policy with id - ${policyId} cannot be found`,
+          404
+        )
+      );
+    }
+
+    res.status(200).json(policy);
   }
 }
 

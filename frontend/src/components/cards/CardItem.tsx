@@ -1,5 +1,6 @@
 import { InsuranceTypes, CardItemProp } from '../../types';
 import { Link } from 'react-router-dom';
+import Text from '../UI/Text';
 
 const getPolicyColor = (type: InsuranceTypes) => {
   const policyColors: { [k in InsuranceTypes]: { backgroundColor: string } } = {
@@ -23,14 +24,17 @@ const CardItem = ({ policy }: CardItemProp) => {
         <div className={`${backgroundColor} grid place-content-center w-1/4`}>
           {policy.icon}
         </div>
-        <div className='p-4 pt-2 pl-3 md:p-6 md:pt-2 md:pl-3 w-3/4'>
-          <h1
-            className='text-lg font-medium mb-2 text-gray-800'
-            data-testid='policy-summary-name'
+        <div className='flex flex-col gap-2 p-4 pt-2 pl-3 md:p-6 md:pt-2 md:pl-3 w-3/4'>
+          <Text
+            size='lg'
+            weight='medium'
+            data_testid='policy-summary-name'
+            color='gray-800'
           >
             {policy.name}
-          </h1>
-          <p className='text-xs text-gray-500'>{policy.description}</p>
+          </Text>
+
+          <Text size='sm'>{policy.description}</Text>
         </div>
       </div>
     </Link>

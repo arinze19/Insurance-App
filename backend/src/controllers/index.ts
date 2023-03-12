@@ -1,3 +1,4 @@
 import PolicyCtrl from './PolicyCtrl';
+import CustomerCtrl from './CustomerCtrl';
 
-export { PolicyCtrl };
+export { CustomerCtrl, PolicyCtrl };

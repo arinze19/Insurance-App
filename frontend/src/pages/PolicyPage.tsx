@@ -3,8 +3,10 @@ import api from '../utils/api';
 import Header from '../components/UI/Header';
 import Table from '../components/UI/Table';
 import { Policy, PageData } from '../types';
+import { useNotificationContext } from '../context/NotificationContext';
 
 const PolicyPage = () => {
+  const notification = useNotificationContext();
   const [policies, setPolicies] = React.useState<Policy[]>([]);
   const [page, setPage] = React.useState<PageData>({
     max: 0,
@@ -21,19 +23,22 @@ const PolicyPage = () => {
   const [loading, setLoading] = React.useState(true);
 
   const handleCall = async (page: PageData) => {
-    try {
-      setLoading(true);
-      const { data } = await api.get(
-        `/policies?search=${filter.query}&filter=${filter.dropdown.value}&offset=${page.offset}`
-      );
+    setLoading(true);
+    const [data, error] = await api.get<{
+      policies: Policy[];
+      page: PageData;
+    }>(
+      `/policies?search=${filter.query}&filter=${filter.dropdown.value}&offset=${page.offset}`
+    );
 
+    if (data) {
       setPolicies(data.policies);
       setPage(data.page);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    } else if (error) {
+      notification.setStatus({ message: error, open: true });
     }
+
+    setLoading(false);
   };
 
   React.useEffect(() => {

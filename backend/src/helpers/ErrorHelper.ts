@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import Logger from './LogsHelper';
+import type { Request, Response } from 'express';
 
 enum ServerErrorCodes {
   internalError = 500,
@@ -9,7 +10,6 @@ enum ServerErrorCodes {
 
 // Base Error class
 class ErrorHandler extends Error {
-  // error: string;
   statusCode: number;
 
   constructor(errorMessage: string, statusCode = 500) {
@@ -21,7 +21,7 @@ class ErrorHandler extends Error {
 }
 
 // Error Logger for server generated errors
-const errorLogger = (err: ErrorHandler, req: Request, res: Response) => {
+const errorLogger = (err: ErrorHandler, req: Request) => {
   console.log('ERROR');
   console.log(
     `Type: ${
@@ -36,12 +36,7 @@ const errorLogger = (err: ErrorHandler, req: Request, res: Response) => {
 };
 
 // General error handler
-const handleError = (
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const handleError = (err: any, req: Request, res: Response) => {
   const customError = err instanceof ErrorHandler ? true : false;
   const statusCode = err.statusCode ?? 500;
 
@@ -56,7 +51,7 @@ const handleError = (
   });
 
   if (statusCode in ServerErrorCodes) {
-    errorLogger(err, req, res);
+    Logger.error(err, req);
   }
 };
 

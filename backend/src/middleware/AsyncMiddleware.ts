@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express'; // type only imports
 
 class AsyncMiddleware {
   static handle(fn: any) {

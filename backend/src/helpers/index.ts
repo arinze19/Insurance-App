@@ -1,3 +1,5 @@
-import { ErrorHandler } from './ErrorHelpers';
+import { ErrorHandler } from './ErrorHelper';
+import Logger from './LogsHelper';
+import TransportHelper from './TransportHelper';
 
-export { ErrorHandler };
+export { ErrorHandler, Logger, TransportHelper };

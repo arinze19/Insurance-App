@@ -1,15 +1,17 @@
-import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
-import { ErrorHandler } from '../helpers/ErrorHelpers';
+import { ErrorHandler } from '../helpers/ErrorHelper';
+import { NextFunction, Request, Response } from 'express';
+
+
 
 class FamilyVld {
-  static validateAdd(req: Request, res: Response, next: NextFunction) {
+  static validateGet(req: Request, res: Response, next: NextFunction) {
     const schema = Joi.object({
-      name: Joi.string().min(4).max(20).required(),
+      customerId: Joi.string().uuid().required(),
     });
 
-    const { error } = schema.validate(req.body, { abortEarly: false });
-    
+    const { error } = schema.validate(req.params, { abortEarly: false });
+
     if (error) {
       let message = '';
       error.details.forEach((msg) => {
@@ -21,8 +23,6 @@ class FamilyVld {
       next();
     }
   }
-
-  
 }
 
 export default FamilyVld;

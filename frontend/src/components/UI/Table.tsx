@@ -1,10 +1,11 @@
 import Badge from './Badge';
+import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
-
 import { TableProps } from '../../types';
 import React from 'react';
 
 const Table = ({ policies, loading, page, setPage }: TableProps) => {
+  const navigate = useNavigate();
   const handlePaginate = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -13,6 +14,9 @@ const Table = ({ policies, loading, page, setPage }: TableProps) => {
     } else {
       setPage({ ...page, offset: (page.offset += 10) });
     }
+  };
+  const handleNavigate = (id: string) => {
+    navigate(id);
   };
 
   return (
@@ -57,12 +61,6 @@ const Table = ({ policies, loading, page, setPage }: TableProps) => {
                       >
                         Status
                       </th>
-                      <th
-                        scope='col'
-                        className='text-sm font-medium text-white-100 px-6 py-4 text-left'
-                      >
-                        Family Members
-                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -90,9 +88,10 @@ const Table = ({ policies, loading, page, setPage }: TableProps) => {
                     ) : (
                       policies.map((policy, i) => (
                         <tr
-                          className='border-b'
+                          className='border-b hover:bg-purple-100 transition-colors ease-linear duration-100 cursor-pointer'
                           key={policy.id}
                           data-testid='table-cell'
+                          onClick={() => handleNavigate(policy.id)}
                         >
                           <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
                             {page.offset + i + 1}
@@ -110,13 +109,6 @@ const Table = ({ policies, loading, page, setPage }: TableProps) => {
                           </td>
                           <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
                             <Badge status={policy.status} />
-                          </td>
-                          <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
-                            {policy.familyMembers
-                              ? policy.familyMembers.map((member, i) => (
-                                  <p key={i}>{member.name} </p>
-                                ))
-                              : null}
                           </td>
                         </tr>
                       ))
