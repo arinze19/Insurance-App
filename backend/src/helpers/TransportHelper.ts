@@ -6,7 +6,7 @@ import Logger from './LogsHelper';
 const { sheets } = config.transport;
 
 const doc = new GoogleSpreadsheet(sheets.url);
-const credentials = sheets.credentialsPath;
+const credentials = sheets.credentials;
 
 class TransportHelper {
   static async transport(logs: ErrorLog[]) {
