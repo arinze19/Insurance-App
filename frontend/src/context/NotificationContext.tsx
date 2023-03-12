@@ -8,7 +8,7 @@ const Context = createContext<{
 } | null>(null);
 
 function NotificationContext({ children }: { children: React.ReactNode }) {
-  const [status, setStatus] = React.useState({ message: '', open: true });
+  const [status, setStatus] = React.useState({ message: '', open: false });
   return (
     <Context.Provider value={{ status, setStatus }}>
       {children}
