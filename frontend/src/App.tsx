@@ -7,7 +7,7 @@ import PolicyDetailPage from './pages/PolicyDetailPage';
 import './index.css';
 
 const App = () => (
-  <div className='fixed w-full h-screen overflow-y-auto bg-purple-50'>
+  <div className='fixed w-full h-screen overflow-y-scroll pb-2 bg-purple-50'>
     <BrowserRouter>
       <Navbar />
       <Routes>
