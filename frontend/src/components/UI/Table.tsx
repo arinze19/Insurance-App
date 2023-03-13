@@ -65,24 +65,21 @@ const Table = ({ policies, loading, page, setPage }: TableProps) => {
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr className='animate-pulse border-b'>
+                      <tr className='border-b'>
                         <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
-                          <div className='bg-gray-300 rounded-sm w-4 p-2'></div>
+                          <div className='bg-gray-200 rounded-sm w-4 p-2'></div>
                         </td>
                         <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
-                          <div className='bg-gray-300 rounded-sm w-20 p-2'></div>
+                          <div className='bg-gray-200 rounded-sm w-20 p-2'></div>
                         </td>
                         <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
-                          <div className='bg-gray-300 rounded-sm w-12 p-2'></div>
+                          <div className='bg-gray-200 rounded-sm w-12 p-2'></div>
                         </td>
                         <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
-                          <div className='bg-gray-300 rounded-sm w-12 p-2'></div>
+                          <div className='bg-gray-200 rounded-sm w-12 p-2'></div>
                         </td>
                         <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
-                          <div className='bg-gray-300 rounded-sm w-12 p-2'></div>
-                        </td>
-                        <td className='text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap'>
-                          <div className='bg-gray-300 rounded-sm w-12 p-2'></div>
+                          <div className='bg-gray-200 rounded-sm w-12 p-2'></div>
                         </td>
                       </tr>
                     ) : (
