@@ -30,10 +30,10 @@ if (!fs.existsSync(logsDir)) {
 }
 
 // setup cron jobs 
-cron.schedule(config.cron.interval, ErrorJobs.cleanLogs, {
-  scheduled: true,
-  timezone: 'Africa/Algiers',
-});
+// cron.schedule(config.cron.interval, ErrorJobs.cleanLogs, {
+//   scheduled: true,
+//   timezone: 'Africa/Algiers',
+// });
 
 // setup routes
 app.use(Routes.route(router));
