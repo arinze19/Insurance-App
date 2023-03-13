@@ -39,7 +39,7 @@
   },
   "scripts": {
     "build": "yarn prisma generate && tsc",
-    "start": "node dist/src/index",
+    "start": "yarn build && node dist/src/index",
     "start:dev": "nodemon",
     "test": "mocha -r ts-node/register src/**/*.test.ts --watch"
   },
