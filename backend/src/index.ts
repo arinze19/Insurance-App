@@ -29,12 +29,11 @@ if (!fs.existsSync(logsDir)) {
   fs.writeFileSync(`${logsDir}/error.log`, JSON.stringify({ logs: [] }));
 }
 
-// TODO: rework to prevent memory leak on docker
 // setup cron jobs 
-// cron.schedule(config.cron.interval, ErrorJobs.cleanLogs, {
-//   scheduled: true,
-//   timezone: 'Africa/Algiers',
-// });
+cron.schedule(config.cron.interval, ErrorJobs.cleanLogs, {
+  scheduled: true,
+  timezone: 'Africa/Algiers',
+});
 
 // setup routes
 app.use(Routes.route(router));

@@ -33,7 +33,7 @@ export default {
     dir: './src/logs',
   },
   cron: {
-    interval: '0 1 * * *',
+    interval: '0 1 * * 0/2', // every sunday two week interval at 1am - Algiers/Africa
   },
   transport: {
     sheets: {

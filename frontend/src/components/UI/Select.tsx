@@ -39,7 +39,7 @@ function Select({
               onClick={handleChange}
               data-value={item.value}
               data-label={item.label}
-              className={`p-4 cursor-pointer hover:bg-purple-100 ease-linear duration-100 ${
+              className={`p-3 cursor-pointer hover:bg-purple-100 ease-linear duration-100 ${
                 i < options.length - 1 && 'border-b'
               } ${
                 selected.label === item.label && 'bg-purple-100 text-purple-200'

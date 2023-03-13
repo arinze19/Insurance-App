@@ -4,6 +4,10 @@
   transform: translate(-50%, -50%);
 }
 
+html {
+  background-color: #fcfcff;
+}
+
 /* ./src/index.css */
 @tailwind base;
 @tailwind components;
